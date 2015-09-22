@@ -61,7 +61,7 @@ angular.module('starter.controllers', [])
       console.log("Booked!");
       $rootScope.bookings.push({
         room: room,
-        time: new Date().getTime(),
+        time: new Date(),
         immediate: true
       });
       $rootScope.bookedRoom = room;
@@ -77,11 +77,11 @@ angular.module('starter.controllers', [])
   .controller('MyLocationController', function ($scope, $stateParams, $rootScope, $ionicPlatform, $cordovaBeacon) {
 
     $scope.beacons = {};
- 
+
     $ionicPlatform.ready(function() {
- 
+
         $cordovaBeacon.requestWhenInUseAuthorization();
- 
+
         $rootScope.$on("$cordovaBeacon:didRangeBeaconsInRegion", function(event, pluginResult) {
             var uniqueBeaconKey;
             for(var i = 0; i < pluginResult.beacons.length; i++) {
@@ -92,11 +92,11 @@ angular.module('starter.controllers', [])
             }
             $scope.$apply();
         });
- 
+
         $cordovaBeacon.startRangingBeaconsInRegion($cordovaBeacon.createBeaconRegion("Light Blue", "b9407f30-f5f8-466e-aff9-25556b57fe6d", 14470, 61580));
         $cordovaBeacon.startRangingBeaconsInRegion($cordovaBeacon.createBeaconRegion("Purple", "b9407f30-f5f8-466e-aff9-25556b57fe6d", 1000, 1));
         $cordovaBeacon.startRangingBeaconsInRegion($cordovaBeacon.createBeaconRegion("Green", "b9407f30-f5f8-466e-aff9-25556b57fe6d", 4473, 1));
- 
+
     });
 
   })
