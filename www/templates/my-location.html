@@ -5,9 +5,33 @@
       <!-- TODO ng-repeat based on the items in the scope -->
       <ion-item class="list card">
         <div class="item">
-          You are here!
+          You are in {{beacons[0].identifier}} room
         </div>
       </ion-item>
     </ion-list>
+    <div class="list">
+        <div class="item" ng-repeat="(key, value) in beacons">
+            <div class="row">
+                <div class="col truncate">
+                    {{value.uuid}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    major: {{value.major}}
+                </div>
+                <div class="col">
+                    minor: {{value.minor}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{value.proximity}}
+                    {{value.accuracy}}
+                    {{value.rssi}}
+                </div>
+            </div>
+        </div>
+    </div>
   </ion-content>
 </ion-view>
