@@ -4,3 +4,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.blue_room {
+	background-color: #61bce6;
+}
+
+.purple_room {
+	background-color: #7b0d56;
+}
+
+.green_room {
+	background-color: #c0efd2;
+}

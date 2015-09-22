@@ -77,6 +77,7 @@ angular.module('starter.controllers', [])
   .controller('MyLocationController', function ($scope, $stateParams, $rootScope, $ionicPlatform, $cordovaBeacon, $http) {
 
     $scope.beacons = {};
+    $scope.currentRoom = '';
 
     $ionicPlatform.ready(function() {
 
@@ -85,19 +86,32 @@ angular.module('starter.controllers', [])
         $rootScope.$on("$cordovaBeacon:didRangeBeaconsInRegion", function(event, pluginResult) {
             var uniqueBeaconKey;
             var data = [];
+            // $http.get('http://10.132.32.162:3030/phones/sam/currentRoom')
+            $http.get('http://172.20.10.4:3030/phones/sam/currentRoom')
+            .then(function(response) {
+              console.log(response.data.roomName);
+               if ($scope.currentRoom !== response.data.roomName) {
+                  $scope.currentRoom = response.data.roomName;
+
+               }
+               console.log(response);
+            });
             for(var i = 0; i < pluginResult.beacons.length; i++) {
               if (pluginResult.beacons[i].major == 14470) {
+                //console.log(pluginResult.beacons[i].rssi + "  FUTURE-3");
                 data.push({
                   "sensorId": "FUTURE-3",
                   "distance": pluginResult.beacons[i].rssi,
                 });
               }
               else if (pluginResult.beacons[i].major == 1000) {
+                //console.log(pluginResult.beacons[i].rssi + "  FUTURE-2");
                 data.push({
                   "sensorId": "FUTURE-2",
                   "distance": pluginResult.beacons[i].rssi,
                 });
               } else {
+                //console.log(pluginResult.beacons[i].rssi + "  FUTURE-1");
                 data.push({
                   "sensorId": "FUTURE-1",
                   "distance": pluginResult.beacons[i].rssi,
@@ -105,15 +119,16 @@ angular.module('starter.controllers', [])
               }
                 uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
                 $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-                $http.put('http://10.132.32.162:3030/phones/sam/beaconData', data)
+            }
+
+            $http.put('http://172.20.10.4:3030/phones/sam/beaconData', data)
                 .then(function(response) {
-                    console.log(response);
+                    //console.log(response);
                 })
                 .catch(function(response) {
-                    console.log(response);
+                    //console.log(response);
                 });
 
-            }
             $scope.$apply();
         });
 
@@ -121,8 +136,8 @@ angular.module('starter.controllers', [])
         $cordovaBeacon.startRangingBeaconsInRegion($cordovaBeacon.createBeaconRegion("Purple", "b9407f30-f5f8-466e-aff9-25556b57fe6d", 1000, 1));
         $cordovaBeacon.startRangingBeaconsInRegion($cordovaBeacon.createBeaconRegion("Green", "b9407f30-f5f8-466e-aff9-25556b57fe6d", 4473, 1));
 
-    });
 
+    });
   })
   .controller('ImmediateSuccessController', function($scope, $stateParams, $state) {
     $scope.goHome = function() {

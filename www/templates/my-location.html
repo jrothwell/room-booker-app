@@ -5,10 +5,25 @@
       <!-- TODO ng-repeat based on the items in the scope -->
       <ion-item class="list card">
         <div class="item">
-          You are in {{beacons[0].identifier}} room
+          You are in {{currentRoom}}
         </div>
       </ion-item>
     </ion-list>
+
+    <div ng-class="{green_room: currentRoom == 'Green'}" style="width: 200px; height: 100px; border: 1px solid gray; margin: auto; margin-bottom: 20px;">
+      
+    </div>
+
+    <div ng-class="{'blue_room': currentRoom == 'Light-Blue'}" style="width: 200px; height: 100px; border: 1px solid gray; margin: auto; margin-bottom: 20px;">
+      
+    </div>
+
+    <div ng-class="{purple_room: currentRoom == 'Purple'}" style="width: 200px; height: 100px; border: 1px solid gray; margin: auto; margin-bottom: 20px;">
+      
+    </div>
+
+
+
     <div class="list">
         <div class="item" ng-repeat="(key, value) in beacons">
             <div class="row">
