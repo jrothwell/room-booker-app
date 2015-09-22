@@ -3,14 +3,10 @@
     <ion-list>
 
       <!-- TODO ng-repeat based on the items in the scope -->
-      <ion-item class="list card">
+      <ion-item class="list card" ng-repeat="booking in bookings">
         <div class="item">
-          You booked this meeting.
-        </div>
-      </ion-item>
-      <ion-item class="list card">
-        <div class="item">
-          You didn't turn up to this one.
+          <h1>{{booking.room.name}}</h1>
+          <p>At {{booking.time}} <span ng-if="booking.immediate">(spot booking)</span></p>
         </div>
       </ion-item>
     </ion-list>

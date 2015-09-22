@@ -6,7 +6,9 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $rootScope) {
+    $rootScope.bookings = [];
+
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -58,6 +60,26 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           'menuContent': {
             templateUrl: 'templates/immediate-booking.html',
             controller: 'ImmediateRoomBookingController'
+          }
+        }
+      })
+
+      .state('app.immediateAvailability', {
+        url: '/roomsNow',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/immediate-availability.html',
+            controller: 'ImmediateRoomsAvailableController'
+          }
+        }
+      })
+
+      .state('app.immediateSuccess', {
+        url: '/successfulSpotBooking',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/success-immediate.html',
+            controller: 'ImmediateSuccessController'
           }
         }
       })
