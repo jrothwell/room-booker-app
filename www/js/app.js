@@ -70,6 +70,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
             controller: 'LaterRoomBookingController'
           }
         }
+      })
+
+      .state('app.myLocation', {
+        url: '/myLocation',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/my-location.html',
+            controller: 'MyLocationController'
+          }
+        }
       });
 
 

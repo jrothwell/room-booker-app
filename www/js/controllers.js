@@ -27,4 +27,7 @@ angular.module('starter.controllers', [])
   })
   .controller('LaterRoomBookingController', function ($scope, $stateParams) {
 
+  })
+  .controller('MyLocationController', function ($scope, $stateParams) {
+
   });
