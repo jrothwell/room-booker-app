@@ -1,5 +1,18 @@
-angular.module('starter.controllers', [])
+var api = "http://172.20.10.4:3030/";
 
+angular.module('starter.controllers', [])
+  .service('sharedProperties', function () {
+    var requiredCapacity = 4;
+
+    return {
+      getCapacity: function () {
+        return requiredCapacity;
+      },
+      setCapacity: function(value) {
+        requiredCapacity = value;
+      }
+    };
+  })
   .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
 
     // With the new view caching in Ionic, Controllers are only called
@@ -22,7 +35,7 @@ angular.module('starter.controllers', [])
   .controller('ExistingBookingsCtrl', function ($scope, $stateParams) {
 
   })
-  .controller('ImmediateRoomBookingController', function ($scope, $state, $rootScope) {
+  .controller('ImmediateRoomBookingController', function ($scope, $state, $rootScope, sharedProperties) {
     $rootScope.numberOfParticipants = 4;
     $rootScope.duration = "30";
 
@@ -31,31 +44,59 @@ angular.module('starter.controllers', [])
     $rootScope.phones = true;
 
     $scope.findRooms = function() {
-      $state.go("app.immediateAvailability")
+      sharedProperties.setCapacity($rootScope.numberOfParticipants);
+      $state.go("app.immediateAvailability");
     }
   })
 
-  .controller('ImmediateRoomsAvailableController', function($scope, $stateParams, $state, $rootScope) {
-    $scope.availableRooms = [
-      {
-        name: "Mako",
-        capacity: 8,
-        whiteboards: true
+  .controller('ImmediateRoomsAvailableController', function($scope, $stateParams, $state, $rootScope, sharedProperties, $http) {
+    var requiredCapacity = sharedProperties.getCapacity();
+
+    $scope.availableRooms = [];
+
+    $http.post(api + 'roomNow/', {
+      duration: $rootScope.duration,
+      location: {
+        city: "London",
+        buildingId: 1,
+        floor: 1
       },
-      {
-        name: "Lantern",
-        capacity: 4,
-        whiteboards: true,
-        phones: true
-      },
-      {
-        name: "Goblin",
-        capacity: 12,
-        whiteboards: true,
-        phones: true,
-        screens: true,
-      },
-    ];
+      capacity: requiredCapacity
+    }).then(function success(response) {
+      response.data.map(function(room) {
+        $scope.availableRooms.push({
+          name: room.roomName,
+          capacity: room.capacity,
+          whiteboards: room.facilities.wheelChairAccess,
+          phones: room.facilities.videoCon,
+          screens: room.facilities.projector,
+          floor: room.floor
+        });
+      });
+    }, function failure(response) {
+      console.log("FAILED!");
+    })
+
+    //$scope.availableRooms = [
+    //  {
+    //    name: "Mako",
+    //    capacity: 8,
+    //    whiteboards: true
+    //  },
+    //  {
+    //    name: "Lantern",
+    //    capacity: 4,
+    //    whiteboards: true,
+    //    phones: true
+    //  },
+    //  {
+    //    name: "Goblin",
+    //    capacity: 12,
+    //    whiteboards: true,
+    //    phones: true,
+    //    screens: true,
+    //  },
+    //];
 
     $scope.book = function(room) {
       console.log("Booked!");
@@ -109,8 +150,8 @@ angular.module('starter.controllers', [])
         capacity: 12,
         whiteboards: true,
         phones: true,
-        screens: true,
-      },
+        screens: true
+      }
     ];
 
     $scope.book = function(room) {
@@ -141,7 +182,7 @@ angular.module('starter.controllers', [])
             var uniqueBeaconKey;
             var data = [];
             // $http.get('http://10.132.32.162:3030/phones/sam/currentRoom')
-            $http.get('http://172.20.10.4:3030/phones/sam/currentRoom')
+            $http.get(api + 'phones/sam/currentRoom')
             .then(function(response) {
               console.log(response.data.roomName);
                if ($scope.currentRoom !== response.data.roomName) {
@@ -175,7 +216,7 @@ angular.module('starter.controllers', [])
                 $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
             }
 
-            $http.put('http://172.20.10.4:3030/phones/sam/beaconData', data)
+            $http.put(api + '/phones/sam/beaconData', data)
                 .then(function(response) {
                     //console.log(response);
                 })
