@@ -5,19 +5,19 @@
         <p>You requested a room with</p>
         <ul>
           <li>
-            {{numberOfParticipants}} participants
+            {{bookingDetails.numberOfParticipants}} participants
           </li>
-          <li ng-if="whiteboards">
+          <li ng-if="bookingDetails.whiteboards">
             Whiteboards
           </li>
-          <li ng-if="screens">
+          <li ng-if="bookingDetails.screens">
             Screens
           </li>
-          <li ng-if="phones">
+          <li ng-if="bookingDetails.phones">
             Phones
           </li>
         </ul>
-        <p>available immediately for a {{duration}} minute slot.</p>
+        <p>available immediately for a {{bookingDetails.duration}} minute slot.</p>
       </div>
     </div>
 

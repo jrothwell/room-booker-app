@@ -13,22 +13,22 @@
     </label>
     <label class="item item-input">
       <span class="input-label">Participant(s)</span>
-      <span class="input-label">{{ numberOfAttendees }} choosen</span>
+      <span class="input-label">{{ bookingDetails.numberOfParticipants }} choosen</span>
       <button class="button button-outline button-balanced" ng-click="chooseAttendees()">
         Add Participants
       </button>
     </label>
     <label class="item item-input">
       <span class="input-label">Date</span>
-      <input type="date" ng-model="dateAndTime">
+      <input type="date" ng-model="bookingDetails.dateAndTime">
     </label>
     <label class="item item-input">
       <span class="input-label">Time</span>
-      <input type="time" ng-model="dateAndTime">
+      <input type="time" ng-model="bookingDetails.dateAndTime">
     </label>
     <div class="item item-input item-select">
       <span class="input-label">Duration</span>
-      <select ng-model="duration">
+      <select ng-model="bookingDetails.duration">
         <option value="15">15 minutes</option>
         <option value="30">30 minutes</option>
         <option value="45">45 minutes</option>
@@ -39,19 +39,19 @@
     <ul class="list">
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="whiteboards">
+          <input type="checkbox" ng-model="bookingDetails.whiteboards">
         </label>
         Whiteboards
       </li>
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="screens">
+          <input type="checkbox" ng-model="bookingDetails.screens">
         </label>
         Screens
       </li>
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="phones">
+          <input type="checkbox" ng-model="bookingDetails.phones">
         </label>
         Phones
       </li>
