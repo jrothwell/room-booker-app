@@ -140,7 +140,7 @@ angular.module('starter.controllers', [])
         $rootScope.$on("$cordovaBeacon:didRangeBeaconsInRegion", function(event, pluginResult) {
             var uniqueBeaconKey;
             var data = [];
-            // $http.get('http://10.132.32.162:3030/phones/sam/currentRoom')
+            // $http.get('http://10.132.32.92:3030/phones/sam/currentRoom')
             $http.get('http://172.20.10.4:3030/phones/sam/currentRoom')
             .then(function(response) {
               console.log(response.data.roomName);
@@ -175,6 +175,7 @@ angular.module('starter.controllers', [])
                 $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
             }
 
+            // $http.put('http://10.132.32.92:3030/phones/sam/beaconData', data)
             $http.put('http://172.20.10.4:3030/phones/sam/beaconData', data)
                 .then(function(response) {
                     //console.log(response);
