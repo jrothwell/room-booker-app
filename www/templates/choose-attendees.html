@@ -1,0 +1,22 @@
+<ion-view view-title="Choose Attendees" name="chooseAttendees">
+  <ion-content>
+    <ul class="list">
+      <div ng-repeat="person in people">
+      <li class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="person.selected">
+        </label>
+        {{ person.name }}
+      </li>
+      </div>
+    </ul>
+    <div class="button-bar">
+      <button class="button button-assertive" ng-click="clearAttendeeList()">
+        Clear
+      </button>
+      <button class="button button-balanced" ng-click="confirmAttendees()">
+        Next
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

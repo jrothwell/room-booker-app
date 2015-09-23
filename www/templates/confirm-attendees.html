@@ -1,0 +1,16 @@
+<ion-view view-title="Confirm Attendees" name="confirmAttendees">
+  <ion-content>
+    <div class="list">
+      <div ng-repeat="(loc, allAttendees) in locOfAttendees">
+        <div class="item item-divider">
+          {{ loc }}
+        </div>
+        
+        <a class="item disabled" ng-repeat="person in allAttendees">
+          {{ person }}
+        </a>
+      </div>
+    </div>
+    <button class="button button-block button-positive button-large" ng-click="submitParticipants()">Confirm Participants</button>
+  </ion-content>
+</ion-view>

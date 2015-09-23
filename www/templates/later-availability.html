@@ -1,0 +1,43 @@
+<ion-view view-title="Rooms Available Later" name="laterAvailability">
+  <ion-content>
+    <div class="item card">
+      <div class="item">
+        <p>You requested a room with</p>
+        <ul>
+          <li>
+            {{numberOfAttendees}} participants
+          </li>
+          <li ng-if="whiteboards">
+            Whiteboards
+          </li>
+          <li ng-if="screens">
+            Screens
+          </li>
+          <li ng-if="phones">
+            Phones
+          </li>
+        </ul>
+        <p>available on {{dateAndTime | date: 'dd/MM/yy'}} at {{dateAndTime | date: 'HH:mm'}} for a {{duration}} minute slot.</p>
+      </div>
+    </div>
+
+    <ion-list>
+      <ion-item class="card" ng-repeat="room in availableRooms" ng-click="book(room)">
+        <div class="item">
+          <h1>{{room.name}}</h1>
+
+          <p>Seats {{room.capacity}}.</p>
+
+          <p>{{room.distance}}</p>
+
+          <p ng-if="room.whiteboards">Provides whiteboards</p>
+
+          <p ng-if="room.screens">Provides screens</p>
+
+          <p ng-if="room.phones">Provides phones</p>
+        </div>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>

@@ -71,9 +71,61 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('LaterRoomBookingController', function ($scope, $stateParams) {
+  .controller('LaterRoomBookingController', function ($scope, $state, $stateParams, $rootScope) {
+    $rootScope.numberOfAttendees = 0;
+    dateTime = new Date();
+    $rootScope.dateAndTime = new Date(dateTime.getFullYear(), dateTime.getMonth(),
+                                  (dateTime.getDate() + 1), 9, 0, 0, 0);
+    $rootScope.duration = "30";
+    $scope.chooseAttendees = function() {
+      $state.go("app.chooseAttendees");
+    };
+    
+    $scope.findRooms = function() {
+      if ($rootScope.attendees.length != 0) {
+        $state.go("app.laterAvailability");
+      } else {
+        delete $rootScope.numberOfAttendees;
+      }
+    };
+  })
+  
+    .controller('LaterRoomsAvailableController', function($scope, $stateParams, $state, $rootScope) {
+    $scope.availableRooms = [
+      {
+        name: "Mako",
+        capacity: 8,
+        whiteboards: true
+      },
+      {
+        name: "Lantern",
+        capacity: 4,
+        whiteboards: true,
+        phones: true
+      },
+      {
+        name: "Goblin",
+        capacity: 12,
+        whiteboards: true,
+        phones: true,
+        screens: true,
+      },
+    ];
+
+    $scope.book = function(room) {
+      console.log("Booked!");
+      $rootScope.bookings.push({
+        room: room,
+        time: $rootScope.dateAndTime,
+        immediate: false
+      });
+      $rootScope.bookedRoom = room;
+
+      $state.go("app.laterSuccess");
+    }
 
   })
+  
   .controller('MyLocationController', function ($scope, $stateParams, $rootScope, $ionicPlatform, $cordovaBeacon, $http) {
 
     $scope.beacons = {};
@@ -142,5 +194,91 @@ angular.module('starter.controllers', [])
   .controller('ImmediateSuccessController', function($scope, $stateParams, $state) {
     $scope.goHome = function() {
       $state.go('app.book');
+    }
+  })
+  
+  .controller('LaterSuccessController', function($scope, $stateParams, $state, $ionicHistory) {
+    $scope.goHome = function() {
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.book');
+    }
+  })
+  
+  .controller('PeopleAttendingController', function ($scope, $state, $stateParams, $rootScope) {
+    $rootScope.attendees = [];
+    $rootScope.locOfAttendees = {};
+    
+    $scope.people = [{
+      "location":"London",
+      "name": "Ben",
+      "selected": false
+    },
+    {
+      "location":"London",
+      "name": "Luke",
+      "selected": false
+    },
+    {
+      "location":"London",
+      "name": "Linda",
+      "selected": false
+    },
+    {
+      "location":"Manchester",
+      "name":"Emma",
+      "selected": false
+    },
+    {
+      "location":"Manchester",
+      "name":"Tom",
+      "selected": false
+    },
+    {
+      "location":"Manchester",
+      "name":"Jenny",
+      "selected": false
+    }];
+    
+    $scope.clearAttendeeList = function() {
+      for (var i = 0; i < $scope.people.length; i++) {
+        $scope.people[i].selected = false;
+      };
+    }
+
+    function isNotEmpty(obj) {
+      for(var key in obj) {
+          if(obj.hasOwnProperty(key))
+              return true;
+      }
+      return false;
+    }
+    
+    $rootScope.confirmAttendees = function() {
+      $rootScope.attendees.length = 0;
+      $rootScope.locOfAttendees = {};
+      for (var i = 0; i < $scope.people.length; i++) {
+        var value = $scope.people[i];
+        if (value.selected) {
+          $rootScope.attendees.push(value);
+          if ($rootScope.locOfAttendees.hasOwnProperty(value.location)) {
+            $rootScope.locOfAttendees[value.location].push(value.name);
+          } else {
+            $rootScope.locOfAttendees[value.location] = [value.name];
+          }
+        }
+      };
+      console.log($rootScope.locOfAttendees.length);
+      if (isNotEmpty($rootScope.locOfAttendees)) {
+        $state.go("app.confirmAttendees");
+      }
+    };
+  })
+  
+  .controller('ConfirmAttendingController', function ($scope, $state, $stateParams, $rootScope) {
+    $rootScope.submitParticipants = function() {
+      $rootScope.numberOfAttendees = $rootScope.attendees.length;
+      $state.go("app.laterBooking");
     }
   });

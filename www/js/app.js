@@ -95,6 +95,46 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordovaBeacon'])
           }
         }
       })
+      
+      .state('app.laterAvailability', {
+        url: '/roomsLater',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/later-availability.html',
+            controller: 'LaterRoomsAvailableController'
+          }
+        }
+      })
+      
+      .state('app.laterSuccess', {
+        url: '/successfulLaterSpotBooking',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/success-later.html',
+            controller: 'LaterSuccessController'
+          }
+        }
+      })
+      
+      .state('app.chooseAttendees', {
+        url: '/choose-attendees',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/choose-attendees.html',
+            controller: 'PeopleAttendingController'
+          }
+        }
+      })
+
+      .state('app.confirmAttendees', {
+        url: '/confirm-attendees',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/confirm-attendees.html',
+            controller: 'ConfirmAttendingController'
+          }
+        }
+      })
 
       .state('app.myLocation', {
         url: '/myLocation',
