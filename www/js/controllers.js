@@ -1,5 +1,18 @@
-angular.module('starter.controllers', [])
+var api = "http://172.20.10.4:3030/";
 
+angular.module('starter.controllers', [])
+  .service('sharedProperties', function () {
+    var requiredCapacity = 4;
+
+    return {
+      getCapacity: function () {
+        return requiredCapacity;
+      },
+      setCapacity: function(value) {
+        requiredCapacity = value;
+      }
+    };
+  })
   .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
 
     // With the new view caching in Ionic, Controllers are only called
@@ -22,40 +35,48 @@ angular.module('starter.controllers', [])
   .controller('ExistingBookingsCtrl', function ($scope, $stateParams) {
 
   })
-  .controller('ImmediateRoomBookingController', function ($scope, $state, $rootScope) {
-    $rootScope.numberOfParticipants = 4;
-    $rootScope.duration = "30";
-
-    $rootScope.whiteboards = false;
-    $rootScope.screens = false;
-    $rootScope.phones = true;
+  .controller('ImmediateRoomBookingController', function ($scope, $state, $rootScope, sharedProperties) {
+    $rootScope.bookingDetails = {
+      numberOfParticipants:4,
+      duration: "30",
+      whiteboards: false,
+      screens: false,
+      phones: true
+    };
 
     $scope.findRooms = function() {
-      $state.go("app.immediateAvailability")
+      sharedProperties.setCapacity($rootScope.bookingDetails.numberOfParticipants);
+      $state.go("app.immediateAvailability");
     }
   })
 
-  .controller('ImmediateRoomsAvailableController', function($scope, $stateParams, $state, $rootScope) {
-    $scope.availableRooms = [
-      {
-        name: "Mako",
-        capacity: 8,
-        whiteboards: true
+  .controller('ImmediateRoomsAvailableController', function($scope, $stateParams, $state, $rootScope, sharedProperties, $http) {
+    var requiredCapacity = sharedProperties.getCapacity();
+
+    $scope.availableRooms = [];
+
+    $http.post(api + 'roomNow/', {
+      duration: $rootScope.duration,
+      location: {
+        city: "London",
+        buildingId: 1,
+        floor: 1
       },
-      {
-        name: "Lantern",
-        capacity: 4,
-        whiteboards: true,
-        phones: true
-      },
-      {
-        name: "Goblin",
-        capacity: 12,
-        whiteboards: true,
-        phones: true,
-        screens: true,
-      },
-    ];
+      capacity: requiredCapacity
+    }).then(function success(response) {
+      response.data.map(function(room) {
+        $scope.availableRooms.push({
+          name: room.roomName,
+          capacity: room.capacity,
+          whiteboards: room.facilities.wheelChairAccess,
+          phones: room.facilities.videoCon,
+          screens: room.facilities.projector,
+          floor: room.floor
+        });
+      });
+    }, function failure(response) {
+      console.log("FAILED!");
+    })
 
     $scope.book = function(room) {
       console.log("Booked!");
@@ -73,11 +94,19 @@ angular.module('starter.controllers', [])
   })
 
   .controller('LaterRoomBookingController', function ($scope, $state, $stateParams, $rootScope) {
-    $rootScope.numberOfAttendees = 0;
     dateTime = new Date();
     $rootScope.dateAndTime = new Date(dateTime.getFullYear(), dateTime.getMonth(),
                                   (dateTime.getDate() + 1), 9, 0, 0, 0);
-    $rootScope.duration = "30";
+
+    $rootScope.bookingDetails = {
+      numberOfParticipants:0,
+      duration: "30",
+      whiteboards: false,
+      screens: false,
+      phones: true,
+      dateAndTime: $rootScope.dateAndTime
+    };
+
     $scope.chooseAttendees = function() {
       $state.go("app.chooseAttendees");
     };
@@ -85,8 +114,6 @@ angular.module('starter.controllers', [])
     $scope.findRooms = function() {
       if ($rootScope.attendees.length != 0) {
         $state.go("app.laterAvailability");
-      } else {
-        delete $rootScope.numberOfAttendees;
       }
     };
   })
@@ -105,12 +132,12 @@ angular.module('starter.controllers', [])
         phones: true
       },
       {
-        name: "Goblin",
+        name: "Park",
         capacity: 12,
         whiteboards: true,
         phones: true,
-        screens: true,
-      },
+        screens: true
+      }
     ];
 
     $scope.book = function(room) {
@@ -123,6 +150,8 @@ angular.module('starter.controllers', [])
       });
       $rootScope.bookedRoom = room;
 
+      $rootScope.bookingDetails.numberOfParticipants = 0;
+      $rootScope.attendees.length = 0;
       $state.go("app.laterSuccess");
     }
 
@@ -140,8 +169,8 @@ angular.module('starter.controllers', [])
         $rootScope.$on("$cordovaBeacon:didRangeBeaconsInRegion", function(event, pluginResult) {
             var uniqueBeaconKey;
             var data = [];
-            // $http.get('http://10.132.32.92:3030/phones/sam/currentRoom')
-            $http.get('http://172.20.10.4:3030/phones/sam/currentRoom')
+            // $http.get('http://10.132.32.162:3030/phones/sam/currentRoom')
+            $http.get(api + 'phones/sam/currentRoom')
             .then(function(response) {
               console.log(response.data.roomName);
                if ($scope.currentRoom !== response.data.roomName) {
@@ -175,8 +204,7 @@ angular.module('starter.controllers', [])
                 $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
             }
 
-            // $http.put('http://10.132.32.92:3030/phones/sam/beaconData', data)
-            $http.put('http://172.20.10.4:3030/phones/sam/beaconData', data)
+            $http.put(api + '/phones/sam/beaconData', data)
                 .then(function(response) {
                     //console.log(response);
                 })
@@ -217,32 +245,32 @@ angular.module('starter.controllers', [])
     $rootScope.locOfAttendees = {};
 
     $scope.people = [{
-      "location":"London",
+      "location":"London Building 1",
       "name": "Ben",
       "selected": false
     },
     {
-      "location":"London",
+      "location":"London Building 1",
       "name": "Luke",
       "selected": false
     },
     {
-      "location":"London",
+      "location":"London Building 1",
       "name": "Linda",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"Lodon Building 2",
       "name":"Emma",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"London Building 3",
       "name":"Tom",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"London Building 1",
       "name":"Jenny",
       "selected": false
     }];
@@ -284,7 +312,7 @@ angular.module('starter.controllers', [])
 
   .controller('ConfirmAttendingController', function ($scope, $state, $stateParams, $rootScope) {
     $rootScope.submitParticipants = function() {
-      $rootScope.numberOfAttendees = $rootScope.attendees.length;
+      $rootScope.bookingDetails.numberOfParticipants = $rootScope.attendees.length;
       $state.go("app.laterBooking");
     }
   });
