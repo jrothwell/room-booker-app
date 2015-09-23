@@ -6,7 +6,8 @@
       <ion-item class="list card" ng-repeat="booking in bookings">
         <div class="item">
           <h1>{{booking.room.name}}</h1>
-          <p>At {{booking.time}} <span ng-if="booking.immediate">(spot booking)</span></p>
+          <p>At {{booking.time | date: 'dd/MM/yy'}} at {{booking.time | date: 'HH:mm'}} <span ng-if="booking.immediate">(spot booking)</span></p>
+          <p>for {{booking.duration}} minutes</p>
         </div>
       </ion-item>
     </ion-list>

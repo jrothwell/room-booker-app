@@ -7,34 +7,36 @@
         <h1>London</h1>
       </div>
     </div>
-    <label class="item item-input">
-      <span class="input-label">Subject</span>
-      <input type="text" placeholder="Subject">
-    </label>
-    <label class="item item-input">
-      <span class="input-label">Participant(s)</span>
-      <span class="input-label">{{ numberOfAttendees }} choosen</span>
-      <button class="button button-outline button-balanced" ng-click="chooseAttendees()">
-        Add Participants
-      </button>
-    </label>
-    <label class="item item-input">
-      <span class="input-label">Date</span>
-      <input type="date" ng-model="dateAndTime">
-    </label>
-    <label class="item item-input">
-      <span class="input-label">Time</span>
-      <input type="time" ng-model="dateAndTime">
-    </label>
-    <div class="item item-input item-select">
-      <span class="input-label">Duration</span>
-      <select ng-model="duration">
-        <option value="15">15 minutes</option>
-        <option value="30">30 minutes</option>
-        <option value="45">45 minutes</option>
-        <option value="60">1 hour</option>
-      </select>
-    </div>
+    <ion-list>
+      <label class="item item-input">
+        <span class="input-label">Subject</span>
+        <input type="text" placeholder="Subject">
+      </label>
+      <ion-item class="item-button-right">
+        {{numberOfAttendees}} participant(s)
+        <button class="button button-positive" ng-click="chooseAttendees()">
+          <i class="icon ion-plus-round"></i>
+        </button>
+      </ion-item>
+      <label class="item item-input">
+        <span class="input-label">Date</span>
+        <input type="date" ng-model="dateAndTime">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Time</span>
+        <input type="time" ng-model="dateAndTime">
+      </label>
+      <div class="item item-input item-select">
+        <span class="input-label">Duration</span>
+        <select ng-model="duration">
+          <option value="15">15 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60">1 hour</option>
+        </select>
+      </div>
+    </ion-list>
+
 
     <ul class="list">
       <li class="item item-checkbox">
