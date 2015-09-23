@@ -36,15 +36,16 @@ angular.module('starter.controllers', [])
 
   })
   .controller('ImmediateRoomBookingController', function ($scope, $state, $rootScope, sharedProperties) {
-    $rootScope.numberOfParticipants = 4;
-    $rootScope.duration = "30";
-
-    $rootScope.whiteboards = false;
-    $rootScope.screens = false;
-    $rootScope.phones = true;
+    $rootScope.bookingDetails = {
+      numberOfParticipants:4,
+      duration: "30",
+      whiteboards: false,
+      screens: false,
+      phones: true
+    };
 
     $scope.findRooms = function() {
-      sharedProperties.setCapacity($rootScope.numberOfParticipants);
+      sharedProperties.setCapacity($rootScope.bookingDetails.numberOfParticipants);
       $state.go("app.immediateAvailability");
     }
   })
@@ -77,27 +78,6 @@ angular.module('starter.controllers', [])
       console.log("FAILED!");
     })
 
-    //$scope.availableRooms = [
-    //  {
-    //    name: "Mako",
-    //    capacity: 8,
-    //    whiteboards: true
-    //  },
-    //  {
-    //    name: "Lantern",
-    //    capacity: 4,
-    //    whiteboards: true,
-    //    phones: true
-    //  },
-    //  {
-    //    name: "Goblin",
-    //    capacity: 12,
-    //    whiteboards: true,
-    //    phones: true,
-    //    screens: true,
-    //  },
-    //];
-
     $scope.book = function(room) {
       console.log("Booked!");
       $rootScope.bookings.push({
@@ -114,11 +94,19 @@ angular.module('starter.controllers', [])
   })
 
   .controller('LaterRoomBookingController', function ($scope, $state, $stateParams, $rootScope) {
-    $rootScope.numberOfAttendees = 0;
     dateTime = new Date();
     $rootScope.dateAndTime = new Date(dateTime.getFullYear(), dateTime.getMonth(),
                                   (dateTime.getDate() + 1), 9, 0, 0, 0);
-    $rootScope.duration = "30";
+
+    $rootScope.bookingDetails = {
+      numberOfParticipants:0,
+      duration: "30",
+      whiteboards: false,
+      screens: false,
+      phones: true,
+      dateAndTime: $rootScope.dateAndTime
+    };
+
     $scope.chooseAttendees = function() {
       $state.go("app.chooseAttendees");
     };
@@ -126,8 +114,6 @@ angular.module('starter.controllers', [])
     $scope.findRooms = function() {
       if ($rootScope.attendees.length != 0) {
         $state.go("app.laterAvailability");
-      } else {
-        delete $rootScope.numberOfAttendees;
       }
     };
   })
@@ -146,7 +132,7 @@ angular.module('starter.controllers', [])
         phones: true
       },
       {
-        name: "Goblin",
+        name: "Park",
         capacity: 12,
         whiteboards: true,
         phones: true,
@@ -164,6 +150,8 @@ angular.module('starter.controllers', [])
       });
       $rootScope.bookedRoom = room;
 
+      $rootScope.bookingDetails.numberOfParticipants = 0;
+      $rootScope.attendees.length = 0;
       $state.go("app.laterSuccess");
     }
 
@@ -257,32 +245,32 @@ angular.module('starter.controllers', [])
     $rootScope.locOfAttendees = {};
 
     $scope.people = [{
-      "location":"London",
+      "location":"London Building 1",
       "name": "Ben",
       "selected": false
     },
     {
-      "location":"London",
+      "location":"London Building 1",
       "name": "Luke",
       "selected": false
     },
     {
-      "location":"London",
+      "location":"London Building 1",
       "name": "Linda",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"Lodon Building 2",
       "name":"Emma",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"London Building 3",
       "name":"Tom",
       "selected": false
     },
     {
-      "location":"Manchester",
+      "location":"London Building 1",
       "name":"Jenny",
       "selected": false
     }];
@@ -324,7 +312,7 @@ angular.module('starter.controllers', [])
 
   .controller('ConfirmAttendingController', function ($scope, $state, $stateParams, $rootScope) {
     $rootScope.submitParticipants = function() {
-      $rootScope.numberOfAttendees = $rootScope.attendees.length;
+      $rootScope.bookingDetails.numberOfParticipants = $rootScope.attendees.length;
       $state.go("app.laterBooking");
     }
   });

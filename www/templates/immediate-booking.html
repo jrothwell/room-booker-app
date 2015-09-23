@@ -8,14 +8,14 @@
       </div>
     </div>
     <div class="item range">
-      <span class="input-label">{{numberOfParticipants}} participants</span>
+      <span class="input-label">{{bookingDetails.numberOfParticipants}} participants</span>
       <i class="icon ion-person"></i>
-      <input type="range" name="people" min="1" max="10" ng-model="numberOfParticipants">
+      <input type="range" name="people" min="1" max="10" ng-model="bookingDetails.numberOfParticipants">
       <i class="icon ion-person-stalker"></i>
     </div>
     <div class="item item-input item-select">
       <span class="input-label">Duration</span>
-      <select ng-model="duration">
+      <select ng-model="bookingDetails.duration">
         <option value="15">15 minutes</option>
         <option value="30">30 minutes</option>
         <option value="45">45 minutes</option>
@@ -26,19 +26,19 @@
     <ul class="list">
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="whiteboards">
+          <input type="checkbox" ng-model="bookingDetails.whiteboards">
         </label>
         Whiteboards
       </li>
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="screens">
+          <input type="checkbox" ng-model="bookingDetails.screens">
         </label>
         Screens
       </li>
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="phones">
+          <input type="checkbox" ng-model="bookingDetails.phones">
         </label>
         Phones
       </li>

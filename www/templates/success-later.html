@@ -7,7 +7,7 @@
           <h1>Thank you</h1>
           <p>You now have</p>
           <h2>{{bookedRoom.name}}</h2>
-          <p>for use on {{dateAndTime | date: 'dd/MM/yy'}} at {{dateAndTime | date: 'HH:mm'}}.</p>
+          <p>for use on {{bookingDetails.dateAndTime | date: 'dd/MM/yy'}} at {{bookingDetails.dateAndTime | date: 'HH:mm'}} for {{bookingDetails.duration}} minutes.</p>
         </div>
       </ion-item>
       <button class="ion-item button button-block button-positive button-large" ng-click="goHome()">
