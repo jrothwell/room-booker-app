@@ -63,7 +63,8 @@ angular.module('starter.controllers', [])
       $rootScope.bookings.push({
         room: room,
         time: new Date(),
-        immediate: true
+        immediate: true,
+        duration: $rootScope.duration
       });
       $rootScope.bookedRoom = room;
 
@@ -89,14 +90,14 @@ angular.module('starter.controllers', [])
     $scope.chooseAttendees = function() {
       $state.go("app.chooseAttendees");
     };
-    
+
     $scope.findRooms = function() {
       if ($rootScope.attendees.length != 0) {
         $state.go("app.laterAvailability");
       }
     };
   })
-  
+
     .controller('LaterRoomsAvailableController', function($scope, $stateParams, $state, $rootScope) {
     $scope.availableRooms = [
       {
@@ -124,7 +125,8 @@ angular.module('starter.controllers', [])
       $rootScope.bookings.push({
         room: room,
         time: $rootScope.dateAndTime,
-        immediate: false
+        immediate: false,
+        duration: $rootScope.duration
       });
       $rootScope.bookedRoom = room;
 
@@ -134,7 +136,7 @@ angular.module('starter.controllers', [])
     }
 
   })
-  
+
   .controller('MyLocationController', function ($scope, $stateParams, $rootScope, $ionicPlatform, $cordovaBeacon, $http) {
 
     $scope.beacons = {};
@@ -208,7 +210,7 @@ angular.module('starter.controllers', [])
       $state.go('app.book');
     }
   })
-  
+
   .controller('LaterSuccessController', function($scope, $stateParams, $state, $ionicHistory) {
     $scope.goHome = function() {
       $ionicHistory.nextViewOptions({
@@ -217,11 +219,11 @@ angular.module('starter.controllers', [])
       $state.go('app.book');
     }
   })
-  
+
   .controller('PeopleAttendingController', function ($scope, $state, $stateParams, $rootScope) {
     $rootScope.attendees = [];
     $rootScope.locOfAttendees = {};
-    
+
     $scope.people = [{
       "location":"London Building 1",
       "name": "Ben",
@@ -252,7 +254,7 @@ angular.module('starter.controllers', [])
       "name":"Jenny",
       "selected": false
     }];
-    
+
     $scope.clearAttendeeList = function() {
       for (var i = 0; i < $scope.people.length; i++) {
         $scope.people[i].selected = false;
@@ -266,7 +268,7 @@ angular.module('starter.controllers', [])
       }
       return false;
     }
-    
+
     $rootScope.confirmAttendees = function() {
       $rootScope.attendees.length = 0;
       $rootScope.locOfAttendees = {};
@@ -287,7 +289,7 @@ angular.module('starter.controllers', [])
       }
     };
   })
-  
+
   .controller('ConfirmAttendingController', function ($scope, $state, $stateParams, $rootScope) {
     $rootScope.submitParticipants = function() {
       $rootScope.bookingDetails.numberOfParticipants = $rootScope.attendees.length;
