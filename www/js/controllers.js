@@ -204,7 +204,7 @@ angular.module('starter.controllers', [])
                 $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
             }
 
-            $http.put(api + '/phones/sam/beaconData', data)
+            $http.put(api + 'phones/sam/beaconData', data)
                 .then(function(response) {
                     //console.log(response);
                 })
